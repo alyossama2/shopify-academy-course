@@ -1,0 +1,21 @@
+# Cursor
+######################
+.cursor
+.cursor/
+.cursorignore
+.gitmodules
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+node_modules
+assets/app*.*
+report.html
+.shopify
+.idea
