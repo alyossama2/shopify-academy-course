@@ -24,7 +24,7 @@ jobs:
             --json \
             --theme ${{ vars.PRODUCTION_THEME_NAME }} \
             --store ${{ secrets.SHOPIFY_FLAG_STORE }} \
-            --password ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
+            --password ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }} \
             --ignore "config/settings_data.json" \
             --ignore "templates/*.json" \
             --ignore "sections/*.json" \
