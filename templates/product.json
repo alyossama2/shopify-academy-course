@@ -45,6 +45,10 @@
             "show_gift_card_recipient": false
           }
         },
+        "out_of_stock_h48Pzp": {
+          "type": "out_of_stock",
+          "settings": {}
+        },
         "description": {
           "type": "description",
           "settings": {}
@@ -73,6 +77,7 @@
         "quantity_selector",
         "price",
         "buy_buttons",
+        "out_of_stock_h48Pzp",
         "description",
         "collapsible_tab_cNXfUN",
         "share"
