@@ -199,7 +199,7 @@
             {% render 'price', product: card_product, price_class: '' %}
           </div>
         </div>
-        {%- if show_quick_add -%}
+        {%- if show_quick_add and card_product.has_only_default_variant -%}
           <div class="quick-add no-js-hidden">
             {%- liquid
               assign product_form_id = 'quick-add-' | append: section_id | append: card_product.id
