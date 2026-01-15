@@ -2281,6 +2281,9 @@
               "label": "Third heading"
             }
           }
+        },
+        "out_of_stock": {
+          "name": "Out of stock"
         }
       },
       "settings": {
