@@ -1,0 +1,11 @@
+{% assign out_of_stock = false %}
+<div>
+  <p>Out of stock:</p>
+  <ul>
+    {% for variant in product.variants %}
+      {% if variant.available == out_of_stock %}
+        <li>{{ variant.title }}</li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</div>
