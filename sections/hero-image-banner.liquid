@@ -1,0 +1,510 @@
+{{ 'section-image-banner.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  #HeroBanner-{{ section.id }} {
+    position: relative;
+    min-height: 50rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  @media screen and (min-width: 750px) {
+    #HeroBanner-{{ section.id }} {
+      min-height: 60rem;
+    }
+  }
+
+  #HeroBanner-{{ section.id }} .hero-banner__media {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+
+  #HeroBanner-{{ section.id }} .hero-banner__media img,
+  #HeroBanner-{{ section.id }} .hero-banner__media video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #HeroBanner-{{ section.id }} .hero-banner__media .hero-banner__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000000;
+    z-index: 1;
+    pointer-events: none;
+    opacity: {{ section.settings.image_overlay_opacity | divided_by: 100.0 }};
+  }
+
+  #HeroBanner-{{ section.id }} .hero-banner__content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 120rem;
+    padding: 4rem 2rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    #HeroBanner-{{ section.id }} .hero-banner__content {
+      padding: 5rem;
+    }
+  }
+
+  #HeroBanner-{{ section.id }} .hero-banner__content--left {
+    text-align: left;
+  }
+
+  #HeroBanner-{{ section.id }} .hero-banner__content--center {
+    text-align: center;
+  }
+
+  #HeroBanner-{{ section.id }} .hero-banner__content--right {
+    text-align: right;
+  }
+
+  #HeroBanner-{{ section.id }} .hero-banner__container {
+    display: inline-block;
+    padding: 3rem 4rem;
+    border-radius: 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    #HeroBanner-{{ section.id }} .hero-banner__container {
+      padding: 4rem 5rem;
+    }
+  }
+
+  {%- if section.settings.container_color == 'black' -%}
+    #HeroBanner-{{ section.id }} .hero-banner__container {
+      background-color: rgba(12, 12, 12, {{ section.settings.background_opacity | divided_by: 100.0 }});
+    }
+  {%- elsif section.settings.container_color == 'white' -%}
+    #HeroBanner-{{ section.id }} .hero-banner__container {
+      background-color: rgba(255, 255, 255, {{ section.settings.background_opacity | divided_by: 100.0 }});
+    }
+  {%- else -%}
+    #HeroBanner-{{ section.id }} .hero-banner__container {
+      background-color: transparent;
+    }
+  {%- endif -%}
+
+  {%- for block in section.blocks -%}
+    {%- if block.type == 'heading' -%}
+      #HeroBanner-{{ section.id }} .hero-banner__heading {
+        color: {{ block.settings.color }};
+        {%- if block.settings.drop_shadow -%}
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        {%- endif -%}
+      }
+    {%- elsif block.type == 'text' -%}
+      #HeroBanner-{{ section.id }} .hero-banner__text {
+        color: {{ block.settings.color }};
+        {%- if block.settings.drop_shadow -%}
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        {%- endif -%}
+      }
+    {%- elsif block.type == 'buttons' -%}
+      #HeroBanner-{{ section.id }} .hero-banner__button-{{ forloop.index }} {
+        color: {{ block.settings.text_color }};
+        border: 2px solid {{ block.settings.button_outline_color }};
+        background-color: transparent;
+        padding: 1.2rem 3rem;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+      }
+
+      #HeroBanner-{{ section.id }} .hero-banner__button-{{ forloop.index }}:hover {
+        background-color: {{ block.settings.button_outline_color }};
+        {%- if block.settings.text_color == '#FFFFFF' -%}
+          color: #0C0C0C;
+        {%- else -%}
+          color: #FFFFFF;
+        {%- endif -%}
+      }
+    {%- endif -%}
+  {%- endfor -%}
+
+  #HeroBanner-{{ section.id }} .hero-banner__buttons-wrapper {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+    justify-content: center;
+  }
+
+  #HeroBanner-{{ section.id }} .hero-banner__content--center .hero-banner__buttons {
+    justify-content: center;
+  }
+
+  #HeroBanner-{{ section.id }} .hero-banner__content--right .hero-banner__buttons {
+    justify-content: flex-end;
+  }
+
+  #HeroBanner-{{ section.id }} .hero-banner__content--left .hero-banner__buttons {
+    justify-content: flex-start;
+  }
+
+  #HeroBanner-{{ section.id }} .hero-banner__heading {
+    margin: 0 0 1.5rem 0;
+    font-size: 3.5rem;
+    line-height: 1.2;
+  }
+
+  @media screen and (min-width: 750px) {
+    #HeroBanner-{{ section.id }} .hero-banner__heading {
+      font-size: 5rem;
+    }
+  }
+
+  #HeroBanner-{{ section.id }} .hero-banner__text {
+    margin: 0 0 2rem 0;
+    font-size: 1.6rem;
+    line-height: 1.6;
+  }
+
+  @media screen and (min-width: 750px) {
+    #HeroBanner-{{ section.id }} .hero-banner__text {
+      font-size: 1.8rem;
+    }
+  }
+{%- endstyle -%}
+
+<div id="HeroBanner-{{ section.id }}" class="hero-banner">
+  <div class="hero-banner__media">
+    {%- if section.settings.background_type == 'image' and section.settings.image != blank -%}
+      {{
+        section.settings.image
+        | image_url: width: 3840
+        | image_tag:
+          loading: 'eager',
+          width: section.settings.image.width,
+          height: section.settings.image.height,
+          sizes: '100vw',
+          widths: '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840',
+          alt: section.settings.image.alt
+        | escape
+      }}
+    {%- elsif section.settings.background_type == 'video' and section.settings.video != blank -%}
+      {{
+        section.settings.video
+        | video_tag: image_size: '1100x', autoplay: true, loop: true, controls: false, muted: true, playsinline: true
+      }}
+    {%- else -%}
+      {% comment %} <div style="background: #f0f0f0; width: 100%; height: 100%;"></div> {% endcomment %}
+      <div class="banner__media media{% if section.settings.image == blank and section.settings.image_2 == blank %} placeholder{% endif %}{% if section.settings.image_2 != blank %} banner__media-half{% endif %}{% if section.settings.image_behavior != 'none' %} animate--{{ section.settings.image_behavior }}{% endif %}">
+        {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
+      </div>
+    {%- endif -%}
+    {%- if section.settings.add_overlay_to_image -%}
+      <div
+        class="hero-banner__overlay"
+        style="opacity: {{ section.settings.image_overlay_opacity | divided_by: 100.0 }};"
+      ></div>
+    {%- endif -%}
+  </div>
+
+  {%- if section.blocks.size > 0 -%}
+    <div class="hero-banner__content hero-banner__content--{{ section.settings.horizontal_alignment | default: 'center' }} page-width">
+      <div class="hero-banner__container">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'heading' -%}
+              {%- if block.settings.heading != blank -%}
+                <h1 class="hero-banner__heading" {{ block.shopify_attributes }}>
+                  {{ block.settings.heading | escape }}
+                </h1>
+              {%- endif -%}
+
+            {%- when 'text' -%}
+              {%- if block.settings.text != blank -%}
+                <div class="hero-banner__text" {{ block.shopify_attributes }}>
+                  {{ block.settings.text | escape }}
+                </div>
+              {%- endif -%}
+          {%- endcase -%}
+        {%- endfor -%}
+
+        {%- assign has_buttons = false -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'buttons' and block.settings.button_label != blank -%}
+            {%- assign has_buttons = true -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+
+        {%- if has_buttons -%}
+          <div class="hero-banner__buttons-wrapper">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'buttons' and block.settings.button_label != blank -%}
+                <a
+                  href="{{ block.settings.button_link | default: '#' }}"
+                  class="hero-banner__button hero-banner__button-{{ forloop.index }}"
+                  {{ block.shopify_attributes }}
+                >
+                  {{ block.settings.button_label | escape }}
+                </a>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Hero image banner",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background type",
+      "options": [
+        {
+          "value": "image",
+          "label": "Image"
+        },
+        {
+          "value": "video",
+          "label": "Video"
+        }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video"
+    },
+    {
+      "type": "checkbox",
+      "id": "add_overlay_to_image",
+      "label": "Add overlay to image",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "image_overlay_opacity",
+      "label": "Image overlay opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment",
+      "label": "Horizontal alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "container_color",
+      "label": "Container color",
+      "options": [
+        {
+          "value": "black",
+          "label": "Black"
+        },
+        {
+          "value": "white",
+          "label": "White"
+        },
+        {
+          "value": "transparent",
+          "label": "Transparent"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "background_opacity",
+      "label": "Background opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "Heading",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Hero image banner"
+        },
+        {
+          "type": "select",
+          "id": "color",
+          "label": "Color",
+          "default": "#FFFFFF",
+          "options": [
+            {
+              "value": "#0C0C0C",
+              "label": "Black"
+            },
+            {
+              "value": "#FFFFFF",
+              "label": "White"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "drop_shadow",
+          "label": "Drop shadow",
+          "default": false
+        }
+      ],
+      "limit": 1
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "This is a text block that can be used to add text to the hero image banner."
+        },
+        {
+          "type": "select",
+          "id": "color",
+          "label": "Color",
+          "default": "#FFFFFF",
+          "options": [
+            {
+              "value": "#0C0C0C",
+              "label": "Black"
+            },
+            {
+              "value": "#FFFFFF",
+              "label": "White"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "drop_shadow",
+          "label": "Drop shadow",
+          "default": false
+        }
+      ],
+      "limit": 1
+    },
+    {
+      "type": "buttons",
+      "name": "Buttons",
+      "settings": [
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "Button label"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        },
+        {
+          "type": "select",
+          "id": "text_color",
+          "label": "Text color",
+          "default": "#FFFFFF",
+          "options": [
+            {
+              "value": "#0C0C0C",
+              "label": "Black"
+            },
+            {
+              "value": "#FFFFFF",
+              "label": "White"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "button_outline_color",
+          "label": "Button outline color",
+          "default": "#FFFFFF",
+          "options": [
+            {
+              "value": "#0C0C0C",
+              "label": "Black"
+            },
+            {
+              "value": "#FFFFFF",
+              "label": "White"
+            }
+          ]
+        }
+      ],
+      "limit": 2
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero image banner",
+      "blocks": [
+        {
+          "type": "heading"
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "buttons"
+        },
+        {
+          "type": "buttons"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
