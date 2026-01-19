@@ -1,0 +1,241 @@
+{% comment %}
+  Template: customer-registration.liquid
+{% endcomment %}
+
+<div class="customer-registration-container">
+  <h1>Create an Account</h1>
+
+  <div id="registration-form">
+    <div id="form-error" class="error-message" style="display: none;"></div>
+    <div id="form-success" class="success-message" style="display: none;"></div>
+
+    <form id="customer-register-form" method="post">
+      <div class="form-field">
+        <label for="firstName">First Name</label>
+        <input type="text" id="firstName" name="firstName" required>
+      </div>
+
+      <div class="form-field">
+        <label for="lastName">Last Name</label>
+        <input type="text" id="lastName" name="lastName" required>
+      </div>
+
+      <div class="form-field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+
+      <div class="form-field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required minlength="8">
+      </div>
+
+      <div class="form-field">
+        <button type="submit" id="register-button">Create Account</button>
+        <div id="loading-spinner" class="spinner" style="display: none;">
+          <span class="spinner-icon"></span>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  .customer-registration-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .form-field {
+    margin-bottom: 1.5rem;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
+  button {
+    padding: 0.75rem 1.5rem;
+    background-color: #4a4a4a;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: #333;
+  }
+
+  .error-message {
+    color: #e74c3c;
+    padding: 1rem;
+    background-color: rgba(231, 76, 60, 0.1);
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+  }
+
+  .success-message {
+    color: #2ecc71;
+    padding: 1rem;
+    background-color: rgba(46, 204, 113, 0.1);
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+  }
+
+  .spinner {
+    display: inline-block;
+    margin-left: 1rem;
+  }
+
+  .spinner-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .disabled {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('customer-register-form');
+    const registerButton = document.getElementById('register-button');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const formError = document.getElementById('form-error');
+    const formSuccess = document.getElementById('form-success');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      formError.style.display = 'none';
+      formSuccess.style.display = 'none';
+
+      form.classList.add('disabled');
+      registerButton.disabled = true;
+      loadingSpinner.style.display = 'inline-block';
+
+      const firstName = document.getElementById('firstName').value;
+      const lastName = document.getElementById('lastName').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      const mutation = `
+        mutation customerCreate($input: CustomerCreateInput!) {
+          customerCreate(input: $input) {
+            customer {
+              id
+              firstName
+              lastName
+              email
+            }
+            customerUserErrors {
+              code
+              field
+              message
+            }
+          }
+        }
+      `;
+
+      const variables = {
+        input: {
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          password: password,
+          acceptsMarketing: false,
+        },
+      };
+
+      fetch('/api/2026-01/graphql.json', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Shopify-Storefront-Access-Token': 'c76c8d56283e8aa57e3564957142a36b',
+        },
+        body: JSON.stringify({
+          query: mutation,
+          variables: variables,
+        }),
+      })
+        .then((response) => response.json())
+        .then((result) => {
+          form.classList.remove('disabled');
+          registerButton.disabled = false;
+          loadingSpinner.style.display = 'none';
+
+          if (result.data && result.data.customerCreate && result.data.customerCreate.customerUserErrors.length > 0) {
+            const errors = result.data.customerCreate.customerUserErrors;
+
+            if (errors.length === 1 && errors[0].code === 'CUSTOMER_DISABLED') {
+              formSuccess.textContent = errors[0].message;
+              formSuccess.style.display = 'block';
+              form.reset();
+            } else {
+              let errorMessage = 'Registration failed: ';
+              errors.forEach((error) => {
+                errorMessage += error.message + ' ';
+              });
+              formError.textContent = errorMessage;
+              formError.style.display = 'block';
+            }
+          } else if (result.data && result.data.customerCreate && result.data.customerCreate.customer) {
+            formSuccess.textContent = 'Account created successfully! Redirecting to your account page...';
+            formSuccess.style.display = 'block';
+            form.reset();
+
+            setTimeout(function () {
+              window.location.href = '/account';
+            }, 3000);
+          } else {
+            formError.textContent = 'An unexpected error occurred. Please try again later.';
+            formError.style.display = 'block';
+          }
+        })
+        .catch((error) => {
+          form.classList.remove('disabled');
+          registerButton.disabled = false;
+          loadingSpinner.style.display = 'none';
+
+          formError.textContent = 'Network error: ' + error.message;
+          formError.style.display = 'block';
+        });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Custom Register",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Custom Register"
+    }
+  ]
+}
+{% endschema %}
